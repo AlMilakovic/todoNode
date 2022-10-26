@@ -12,16 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = __importDefault(require("fs"));
-function getToDos() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const toDos = yield fs_1.default.promises.readFile("todos.txt", "utf-8");
-            return toDos;
-        }
-        catch (error) {
-            return error;
-        }
-    });
+const express_1 = require("express");
+const getToDos_1 = __importDefault(require("../../repository/todo.repository/getToDos"));
+function getToDosItems() {
+    const getToDosRouter = (0, express_1.Router)();
+    getToDosRouter.get("/todos/all", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        const todos = (yield (0, getToDos_1.default)());
+        return res.status(200).send({ message: "success", data: todos });
+    }));
+    return getToDosRouter;
 }
-exports.default = getToDos;
+exports.default = getToDosItems;

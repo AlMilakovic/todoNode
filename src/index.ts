@@ -1,14 +1,13 @@
-import express, { Application } from "express";
+import express from "express";
 import routes from "./routes";
 const app = express();
 
-const port: number = 8082;
-const host: string = "localhost";
+const port: number = 8081;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(routes);
 
-app.listen(port, host, () => {
+app.listen(port, () => {
   console.log("connected successfully");
-  routes(app);
 });
