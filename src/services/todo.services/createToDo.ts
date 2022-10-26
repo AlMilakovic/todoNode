@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import fs from "fs";
 
 type Body = { title: string; description: string };
 type ToDO = {
@@ -21,7 +20,7 @@ export function validateBody(body: Body) {
   }
 }
 
-export function createToDo(title: string, description: string) {
+export function createToDoObject(title: string, description: string) {
   const id = uuidv4();
   const createdDate = new Date().toUTCString();
   const toDo: ToDO = {
@@ -31,14 +30,4 @@ export function createToDo(title: string, description: string) {
     createdDate,
   };
   return toDo;
-}
-
-export function saveTodo(toDo: ToDO) {
-  try {
-    fs.appendFile("todos.txt", JSON.stringify(toDo) + "\r\n", (error) => {
-      if (error) return { error };
-    });
-  } catch (error) {
-    return { error: "Something went wrong with todo saving" };
-  }
 }
