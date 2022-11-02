@@ -2,13 +2,13 @@ import { Router, Request, Response } from "express";
 import {
   validateBody,
   createToDoObject,
-} from "../../services/todo.services/createToDo";
-import { saveTodo } from "../../repository/todo.repository/saveToDo";
+} from "../../services/todo.services/todoServices";
+import { saveTodo } from "../../repository/todo.repository/todoRepository";
 
-export default function createToDoItem(): Router {
-  const createToDoRouter = Router();
+export function todoRouter(): Router {
+  const todoRouter = Router();
 
-  return createToDoRouter.post("/", async (req: Request, res: Response) => {
+  return todoRouter.post("/", async (req: Request, res: Response) => {
     const bodyValidationResult = validateBody(req.body);
     if (bodyValidationResult?.error) {
       return res.status(400).send({ error: bodyValidationResult.error });
