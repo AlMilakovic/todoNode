@@ -1,13 +1,16 @@
 import { Router, Request, Response } from "express";
-import getToDos from "../../repository/todo.repository/getToDos";
+import getToDo, { getToDoOutcome } from "../../services/todo.services/getToDo";
 
-export default function getToDoItem(): Router {
+export function getToDoItem(): Router {
   const getToDoRouter = Router();
 
-  getToDoRouter.get("/todos/all", async (req: Request, res: Response) => {
-    const todos: string = (await getToDos()) as string;
+  getToDoRouter.get("/:id", async (req: Request, res: Response) => {
+    const getToDoOutcome = (await getToDo(req.params.id)) as getToDoOutcome;
 
-    return res.status(200).send({ message: "success", data: todos });
+    return res
+      .status(200)
+      .send({ message: getToDoOutcome.message, data: getToDoOutcome.data });
   });
+
   return getToDoRouter;
 }

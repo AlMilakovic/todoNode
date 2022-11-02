@@ -6,9 +6,19 @@ type ToDO = {
   createdDate: string;
   id: string;
 };
+export type getToDoOutcome = {
+  data: object;
+  message: string;
+};
 
-// export default async function getToDo(id:string):ToDO {
+export default async function getToDo(id: string): Promise<getToDoOutcome> {
+  const todos: [] = (await getToDos()) as [];
+  let toDo = null;
+  toDo = todos.find((todo: ToDO): boolean => todo.id === id) as any;
 
-//     const todos = await getToDos();
+  if (!toDo) {
+    return { message: "Can not find any todo with provided id", data: {} };
+  }
 
-// };
+  return { data: toDo, message: "succes" };
+}
