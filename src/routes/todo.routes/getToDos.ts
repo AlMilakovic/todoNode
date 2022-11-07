@@ -1,12 +1,10 @@
 import { Router, Request, Response } from "express";
-import getToDos from "../../repository/todo.repository/todoRepository";
+import { todos } from "../../repository/todo.repository/todos";
 
-export function todoRouter(): Router {
+export function getToDosRouter(): Router {
   const todoRouter = Router();
 
-  return todoRouter.get("/all", async (req: Request, res: Response) => {
-    const todos = await getToDos();
-
+  return todoRouter.get("/", (req: Request, res: Response) => {
     return res.status(200).send({ message: "success", data: todos });
   });
 }

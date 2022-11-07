@@ -4,5 +4,3 @@ export type ToDo = {
   createdDate: string;
   id: string;
 };
-
-export type NewToDoDto = { title: string; description: string };
