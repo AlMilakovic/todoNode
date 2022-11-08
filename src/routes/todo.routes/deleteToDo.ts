@@ -1,5 +1,8 @@
 import { Router, Request, Response } from "express";
 import { deleteTodo } from "../../repository/todo.repository/todoRepository";
+import { Api404Error } from "../../services/error.services/api404Error.";
+import { Api500Error } from "../../services/error.services/api500Error";
+import { httpStatusCodes } from "../../services/error.services/httpStatusCodes";
 import getToDo from "../../services/todo.services/todoServices";
 
 export function deleteToDoRouter(): Router {
@@ -8,13 +11,14 @@ export function deleteToDoRouter(): Router {
     const toDo = getToDo(req.params.id);
 
     if (!toDo) {
-      return res
-        .status(400)
-        .send({ message: "Can not find any todo with provided id" });
+      throw new Api404Error(`ToDo with id: ${req.params.id} not found`);
     }
 
-    deleteTodo(toDo);
+    const deleteOutcome = deleteTodo(toDo);
 
-    return res.status(200).send({ message: "TO DO DELETED" });
+    if (deleteOutcome.isErr()) {
+      throw new Api500Error(deleteOutcome.error);
+    }
+    return res.status(httpStatusCodes.OK).send({ message: "TO DO DELETED" });
   });
 }

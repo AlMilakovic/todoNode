@@ -1,1 +1,1 @@
-export type newToDoDto = { title: string; description: string };
+export type NewToDoDto = { title: string; description: string };
