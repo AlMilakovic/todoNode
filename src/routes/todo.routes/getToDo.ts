@@ -1,4 +1,6 @@
 import { Router, Request, Response } from "express";
+import { Api404Error } from "../../services/error.services/api404Error.";
+import { httpStatusCodes } from "../../services/error.services/httpStatusCodes";
 import getToDo from "../../services/todo.services/todoServices";
 
 export function getToDoRouter(): Router {
@@ -8,10 +10,10 @@ export function getToDoRouter(): Router {
     const toDo = getToDo(req.params.id);
 
     if (!toDo) {
-      return res
-        .status(400)
-        .send({ message: "Can not find any todo with provided id" });
+      throw new Api404Error(`ToDo with id: ${req.params.id} not found`);
     }
-    return res.status(200).send({ message: "success", data: toDo });
+    return res
+      .status(httpStatusCodes.OK)
+      .send({ message: "success", data: toDo });
   });
 }

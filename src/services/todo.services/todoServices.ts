@@ -1,18 +1,20 @@
 import { ToDo } from "../../repository/todo.repository/types";
 import { v4 as uuidv4 } from "uuid";
 import { todos } from "../../repository/todo.repository/todos";
-import { newToDoDto } from "../../routes/dto/newToDoDto";
+import { NewToDoDto } from "../../routes/dto/newToDoDto";
+import { err, ok } from "neverthrow";
 
-export function validateBody(body: newToDoDto) {
-  if (!body) {
-    return { error: "Missing body" };
+export function validateBody(body: NewToDoDto) {
+  if (Object.keys(body).length === 0) {
+    return err("Missing body");
   }
   if (!body.title) {
-    return { error: "Missing title" };
+    return err("Missing title");
   }
   if (!body.description) {
-    return { error: "Missing description" };
+    return err("Missing description");
   }
+  return ok("OK");
 }
 
 export function createToDo(title: string, description: string): ToDo {
@@ -27,9 +29,9 @@ export function createToDo(title: string, description: string): ToDo {
   return toDo;
 }
 
-export default function getToDo(id: string): ToDo {
+export default function getToDo(id: string): ToDo | undefined {
   let toDo = null;
-  toDo = todos.find((todo: ToDo): boolean => todo?.id === id) as ToDo;
+  toDo = todos.find((todo: ToDo): boolean => todo?.id === id);
 
   return toDo;
 }

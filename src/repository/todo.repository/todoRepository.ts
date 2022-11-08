@@ -1,12 +1,28 @@
-import { todos } from "./todos";
+import { setTodos, todos } from "./todos";
 import { ToDo } from "./types";
+import { err, ok } from "neverthrow";
 
 export function saveTodo(toDo: ToDo) {
-  todos.push(toDo);
+  try {
+    todos.push(toDo);
+    return ok("OK");
+  } catch (error) {
+    console.log(error);
+
+    return err("Something went wrong");
+  }
 }
 
 export function deleteTodo(toDo: ToDo) {
-  const index = todos.findIndex((todo: ToDo) => todo.id === toDo.id);
+  try {
+    const newTodos = todos.filter((todo: ToDo) => todo.id !== toDo.id) as [
+      ToDo
+    ];
 
-  return todos.splice(index, 1);
+    setTodos(newTodos);
+    return ok("OK");
+  } catch (error) {
+    console.log(error);
+    return err("Something went wrong");
+  }
 }

@@ -4,19 +4,25 @@ import {
   createToDo,
 } from "../../services/todo.services/todoServices";
 import { saveTodo } from "../../repository/todo.repository/todoRepository";
+import { Api400Error } from "../../services/error.services/api400Error";
+import { Api500Error } from "../../services/error.services/api500Error";
+import { httpStatusCodes } from "../../services/error.services/httpStatusCodes";
 
 export function createToDoRouter(): Router {
   const todoRouter = Router();
 
   return todoRouter.post("/", (req: Request, res: Response) => {
-    const bodyValidationResult = validateBody(req.body);
-    if (bodyValidationResult?.error) {
-      return res.status(400).send({ error: bodyValidationResult.error });
+    const inputValidationOutcome = validateBody(req.body);
+    if (inputValidationOutcome.isErr()) {
+      throw new Api400Error(inputValidationOutcome.error);
     }
     const { title, description } = req.body;
     const toDo = createToDo(title, description);
-    saveTodo(toDo);
 
-    return res.status(200).send({ message: "TO DO CREATED" });
+    const saveOutcome = saveTodo(toDo);
+    if (saveOutcome.isErr()) {
+      throw new Api500Error(saveOutcome.error);
+    }
+    return res.status(httpStatusCodes.OK).send({ message: "TO DO CREATED" });
   });
 }
