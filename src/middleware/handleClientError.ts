@@ -13,7 +13,7 @@ export function handleClientError(
   if (error instanceof Api404Error) {
     response.status(httpStatusCodes.NOT_FOUND).send(error);
   } else if (error instanceof Api400Error) {
-    response.status(httpStatusCodes.INTERNAL_SERVER).send(error);
+    response.status(httpStatusCodes.BAD_REQUEST).send(error);
   } else if (error instanceof Api500Error) {
     response.status(httpStatusCodes.INTERNAL_SERVER).send(error);
   }

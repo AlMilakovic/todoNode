@@ -19,6 +19,7 @@
   "homepage": "https://github.com/AlMilakovic/todoNode#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "express-validator": "^6.14.2",
     "neverthrow": "^5.1.0",
     "ts-node": "^10.9.1",
     "uniqid": "^5.4.0"
