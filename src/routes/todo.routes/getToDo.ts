@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { Api404Error } from "../../services/error.services/api404Error";
-import { Api500Error } from "../../services/error.services/api500Error";
 import { httpStatusCodes } from "../../services/error.services/httpStatusCodes";
 import getToDo from "../../services/todo.services/todoServices";
 
@@ -9,10 +8,10 @@ export function getToDoRouter(): Router {
 
   return todoRouter.get(
     "/:id",
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       let toDo = {};
       try {
-        getToDo(req.params.id).match(
+        (await getToDo(req.params.id)).match(
           (value) => {
             toDo = value;
           },
@@ -20,8 +19,6 @@ export function getToDoRouter(): Router {
             switch (e) {
               case "TODO_NOT_FOUND":
                 throw new Api404Error(e);
-              default:
-                throw new Api500Error("Something went wrong");
             }
           }
         );
