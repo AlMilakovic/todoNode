@@ -1,22 +1,25 @@
-import { setTodos, todos } from "./todos";
 import { ToDo } from "./types";
+import { todo as todoModel } from "../../database/models/todos";
 
-export function saveTodo(toDo: ToDo) {
-  try {
-    todos.push(toDo);
-  } catch (error) {
-    console.log(error);
-  }
+export async function saveToDo(todo: ToDo) {
+  return await new todoModel(todo)
+    .save()
+    .then((data) => {
+      return { todo: data, error: null };
+    })
+    .catch((err) => {
+      return { todo: null, error: err };
+    });
 }
 
-export function deleteTodo(toDo: ToDo) {
-  try {
-    const newTodos = todos.filter((todo: ToDo) => todo.id !== toDo.id) as [
-      ToDo
-    ];
-
-    setTodos(newTodos);
-  } catch (error) {
-    console.log(error);
-  }
+export async function deleteToDo(id: string) {
+  return await todoModel
+    .deleteOne({ id: id })
+    .then((result) => {
+      console.log(result);
+      return { todo: result, error: null };
+    })
+    .catch((err) => {
+      return { todo: null, error: err };
+    });
 }
