@@ -2,12 +2,15 @@ import { ToDo } from "../../repository/todo.repository/types";
 import { v4 as uuidv4 } from "uuid";
 import { todo } from "../../database/models/todos";
 import { err, ok, Result } from "neverthrow";
-
-export type CreateToDoError = "TODO_CREATION_ERROR";
+import { saveToDo } from "../../repository/todo.repository/todoRepository";
+import { deleteToDo as removeToDo } from "../../repository/todo.repository/todoRepository";
 
 export type GetToDoError = "TODO_NOT_FOUND";
 
-export function createToDo(title: string, description: string): ToDo {
+export async function createToDo(
+  title: string,
+  description: string
+): Promise<Result<ToDo, string>> {
   const id = uuidv4();
   const createdDate = new Date().toUTCString();
   const toDo: ToDo = {
@@ -16,8 +19,19 @@ export function createToDo(title: string, description: string): ToDo {
     id,
     createdDate,
   };
+  const resultSave = await saveToDo(toDo);
+  if (resultSave.error) {
+    return err(resultSave.error);
+  }
 
-  return toDo;
+  return ok(resultSave.todo as ToDo);
+}
+export async function deleteToDo(id: string): Promise<Result<string, string>> {
+  const deleteResult = await removeToDo(id);
+  if (!deleteResult.todo) {
+    return err(deleteResult.error);
+  }
+  return ok("ok");
 }
 
 export default async function getToDo(

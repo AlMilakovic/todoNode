@@ -11,7 +11,9 @@ export function createToDoHandler(
 ) {
   const error = validationResult(request).formatWith(errorFormatter);
   if (!error.isEmpty()) {
-    throw new Api400Error(JSON.stringify(error.array()));
+    throw new Api400Error(
+      JSON.stringify(error.array({ onlyFirstError: true }))
+    );
   }
   next();
 }

@@ -2,9 +2,9 @@ import { Router, Request, Response, NextFunction } from "express";
 
 import { Api404Error } from "../../services/error.services/api404Error";
 import { httpStatusCodes } from "../../services/error.services/httpStatusCodes";
-import getToDo from "../../services/todo.services/todoServices";
+import getToDo, { deleteToDo } from "../../services/todo.services/todoServices";
 import { ToDo } from "../../repository/todo.repository/types";
-import { todo } from "../../database/models/todos";
+import { MongoError } from "mongodb";
 
 export function deleteToDoRouter(): Router {
   const todoRouter = Router();
@@ -15,11 +15,14 @@ export function deleteToDoRouter(): Router {
         let toDo = {} as ToDo;
 
         (await getToDo(req.params.id)).match(
-          (value) => {
+          async (value) => {
             toDo = value;
-            todo
-              .deleteOne({ id: toDo.id })
-              .catch((err) => console.log("err", err));
+            (await deleteToDo(toDo.id)).match(
+              () => {},
+              (err) => {
+                throw new MongoError(err);
+              }
+            );
           },
           (e) => {
             switch (e) {
@@ -31,7 +34,7 @@ export function deleteToDoRouter(): Router {
 
         return res
           .status(httpStatusCodes.OK)
-          .send({ message: "TO DO DELETED" });
+          .send({ message: "TO DO DELETED", data: toDo });
       } catch (error) {
         console.log(error);
         next(error);

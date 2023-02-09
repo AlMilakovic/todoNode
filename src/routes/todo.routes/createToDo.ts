@@ -5,7 +5,7 @@ import { httpStatusCodes } from "../../services/error.services/httpStatusCodes";
 import { ToDo } from "../../repository/todo.repository/types";
 import { toDoDTOSchema } from "../toDoDTO/toDoDTO";
 import { createToDoHandler } from "../../middleware/createToDoHandler";
-import { todo as todoModel } from "../../database/models/todos";
+import { MongoError } from "mongodb";
 
 export function createToDoRouter(): Router {
   const todoRouter = Router();
@@ -14,13 +14,18 @@ export function createToDoRouter(): Router {
     "/",
     toDoDTOSchema,
     createToDoHandler,
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       let todo = {} as ToDo;
       try {
         const { title, description } = req.body;
-        todo = createToDo(title, description);
-
-        new todoModel(todo).save().catch((err) => console.log("err", err));
+        (await createToDo(title, description)).match(
+          (value) => {
+            todo = value;
+          },
+          (e) => {
+            throw new MongoError(e);
+          }
+        );
 
         return res
           .status(httpStatusCodes.OK)
