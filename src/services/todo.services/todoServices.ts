@@ -18,6 +18,7 @@ export async function createToDo(
     description,
     id,
     createdDate,
+    userId: "random@email.com",
   };
   const resultSave = await saveToDo(toDo);
   if (resultSave.error) {
