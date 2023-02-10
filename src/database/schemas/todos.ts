@@ -5,4 +5,5 @@ export const todosSchema = new mongoose.Schema({
   title: { type: String, unique: true },
   description: { type: String, minLength: 10 },
   createdDate: { type: String },
+  userId: { type: String, required: true },
 });

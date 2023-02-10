@@ -7,6 +7,8 @@ import { handleClientError } from "./middleware/handleClientError";
 import morgan from "morgan";
 import "./database/config/mongoose-config";
 import cors from "cors";
+import sessions from "express-session";
+import cookieParser from "cookie-parser";
 
 const corsOptions = {
   origin: process.env.FRONTEND_HOST,
@@ -26,6 +28,18 @@ app.use(
     },
   })
 );
+const fiveHours = 1000 * 60 * 60 * 5;
+const sessionKey = process.env.SESSION_KEY;
+
+app.use(
+  sessions({
+    secret: sessionKey as string,
+    saveUninitialized: true,
+    cookie: { maxAge: fiveHours },
+    resave: false,
+  })
+);
+app.use(cookieParser());
 
 app.use(routes);
 app.use(handleClientError);

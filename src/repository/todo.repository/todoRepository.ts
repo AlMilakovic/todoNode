@@ -16,7 +16,6 @@ export async function deleteToDo(id: string) {
   return await todoModel
     .deleteOne({ id: id })
     .then((result) => {
-      console.log(result);
       return { todo: result, error: null };
     })
     .catch((err) => {
