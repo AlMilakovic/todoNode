@@ -4,7 +4,7 @@ import { Api400Error } from "../services/error.services/api400Error";
 const errorFormatter = ({ msg, param }: ValidationError) => {
   return `${param}: ${msg}`;
 };
-export function createToDoHandler(
+export function inputValidationHandler(
   request: express.Request,
   response: express.Response,
   next: express.NextFunction

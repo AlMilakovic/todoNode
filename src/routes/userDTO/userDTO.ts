@@ -1,5 +1,6 @@
 import { body } from "express-validator";
 import { user } from "../../database/models/users";
+import bcrypt from "bcrypt";
 
 export const userDTOSchema = [
   body("fullName")
@@ -46,4 +47,36 @@ export const userDTOSchema = [
     .escape()
     .custom((value, { req }) => value === req.body.password)
     .withMessage("Passwords are not equal"),
+];
+
+export const userLoginDTOSchema = [
+  body("email")
+    .notEmpty()
+    .withMessage("Missing email")
+    .escape()
+    .isEmail()
+    .withMessage("Incorrect email format")
+    .custom((value) => {
+      return user.findOne({ email: value }).then((data) => {
+        if (!data) return Promise.reject("User does not exist");
+      });
+    }),
+  body("password")
+    .notEmpty()
+    .withMessage("Missing password")
+
+    .escape()
+    .custom((value, { req }) => {
+      return user.findOne({ email: req.body.email }).then(async (data) => {
+        if (!data) return;
+
+        const passwordCompareResult = await bcrypt.compare(
+          value,
+          data?.password
+        );
+
+        if (!passwordCompareResult) return Promise.reject("Wrong password");
+      });
+    })
+    .withMessage(""),
 ];

@@ -4,7 +4,7 @@ import { createToDo } from "../../services/todo.services/todoServices";
 import { httpStatusCodes } from "../../services/error.services/httpStatusCodes";
 import { ToDo } from "../../repository/todo.repository/types";
 import { toDoDTOSchema } from "../toDoDTO/toDoDTO";
-import { createToDoHandler } from "../../middleware/createToDoHandler";
+import { inputValidationHandler } from "../../middleware/inputValidationHandler";
 import { MongoError } from "mongodb";
 
 export function createToDoRouter(): Router {
@@ -13,7 +13,7 @@ export function createToDoRouter(): Router {
   return todoRouter.post(
     "/",
     toDoDTOSchema,
-    createToDoHandler,
+    inputValidationHandler,
     async (req: Request, res: Response, next: NextFunction) => {
       let todo = {} as ToDo;
       try {

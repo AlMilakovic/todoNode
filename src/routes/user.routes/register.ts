@@ -5,8 +5,8 @@ import { User } from "../../repository/todo.repository/types";
 import { MongoError } from "mongodb";
 import { userDTOSchema } from "../userDTO/userDTO";
 import { createUser } from "../../services/user.services/userServices";
-import { registerUserHandler } from "../../middleware/registerUserHandler";
 import bcrypt from "bcrypt";
+import { inputValidationHandler } from "../../middleware/inputValidationHandler";
 
 const saltRounds = 2;
 
@@ -16,7 +16,7 @@ export function registerUserRouter(): Router {
   return userRouter.post(
     "/register",
     userDTOSchema,
-    registerUserHandler,
+    inputValidationHandler,
 
     async (req: Request, res: Response, next: NextFunction) => {
       let user = {} as User;
