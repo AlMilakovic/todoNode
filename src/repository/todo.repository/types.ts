@@ -5,9 +5,3 @@ export type ToDo = {
   id: string;
   userId: string;
 };
-
-export type User = {
-  fullName: string;
-  email: string;
-  password: string;
-};

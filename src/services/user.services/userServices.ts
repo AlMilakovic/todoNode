@@ -1,16 +1,18 @@
-import { User } from "../../repository/todo.repository/types";
+import { User } from "../../repository/user.repository/types";
 
 import { err, ok, Result } from "neverthrow";
 
 import { saveUser } from "../../repository/user.repository/userRepository";
 
 export async function createUser(
-  fullName: string,
+  firstName: string,
+  lastName: string,
   email: string,
   password: string
 ): Promise<Result<User, string>> {
   const user: User = {
-    fullName,
+    firstName,
+    lastName,
     email,
     password,
   };

@@ -12,34 +12,34 @@ import cookieParser from "cookie-parser";
 
 const corsOptions = {
   origin: process.env.FRONTEND_HOST,
+  credentials: true,
 };
 
 const app = express();
 
 const port = process.env.PORT;
-app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  morgan("tiny", {
-    skip: function (req, res) {
-      return res.statusCode < 400;
-    },
-  })
-);
+app.use(morgan("tiny"));
 const fiveHours = 1000 * 60 * 60 * 5;
 const sessionKey = process.env.SESSION_KEY;
 
 app.use(
   sessions({
     secret: sessionKey as string,
-    saveUninitialized: true,
-    cookie: { maxAge: fiveHours },
-    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: fiveHours,
+
+      sameSite: true,
+      secure: false,
+      httpOnly: false,
+    },
   })
 );
 app.use(cookieParser());
+app.use(cors(corsOptions));
 
 app.use(routes);
 app.use(handleClientError);

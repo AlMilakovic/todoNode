@@ -11,7 +11,7 @@ export function getToDoRouter(): Router {
     async (req: Request, res: Response, next: NextFunction) => {
       let toDo = {};
       try {
-        (await getToDo(req.params.id)).match(
+        (await getToDo(req.params.id, req.session?.userId)).match(
           (value) => {
             toDo = value;
           },

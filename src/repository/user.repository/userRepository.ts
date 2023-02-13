@@ -1,5 +1,5 @@
 import { user as userModel } from "../../database/models/users";
-import { User } from "../todo.repository/types";
+import { User } from "../user.repository/types";
 
 export async function saveUser(user: User) {
   return await new userModel(user)

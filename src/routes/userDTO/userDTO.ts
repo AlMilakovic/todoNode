@@ -3,12 +3,20 @@ import { user } from "../../database/models/users";
 import bcrypt from "bcrypt";
 
 export const userDTOSchema = [
-  body("fullName")
+  body("firstName")
     .notEmpty()
-    .withMessage("Missing full name")
+    .withMessage("Missing first name")
     .escape()
     .isString()
     .withMessage("Name should contain only letters")
+    .escape(),
+
+  body("lastName")
+    .notEmpty()
+    .withMessage("Missing last name")
+    .escape()
+    .isString()
+    .withMessage("Last name should contain only letters")
     .escape(),
 
   body("email")

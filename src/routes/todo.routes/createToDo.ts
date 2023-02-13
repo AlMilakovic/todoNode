@@ -18,7 +18,7 @@ export function createToDoRouter(): Router {
       let todo = {} as ToDo;
       try {
         const { title, description } = req.body;
-        (await createToDo(title, description)).match(
+        (await createToDo(title, description, req?.session?.userId)).match(
           (value) => {
             todo = value;
           },
