@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 
 import { httpStatusCodes } from "../../services/error.services/httpStatusCodes";
-import { User } from "../../repository/todo.repository/types";
+import { User } from "../../repository/user.repository/types";
 import { MongoError } from "mongodb";
 import { userDTOSchema } from "../userDTO/userDTO";
 import { createUser } from "../../services/user.services/userServices";
@@ -21,9 +21,9 @@ export function registerUserRouter(): Router {
     async (req: Request, res: Response, next: NextFunction) => {
       let user = {} as User;
       try {
-        const { fullName, email, password } = req.body;
+        const { firstName, lastName, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        (await createUser(fullName, email, hashedPassword)).match(
+        (await createUser(firstName, lastName, email, hashedPassword)).match(
           (value) => {
             user = value;
           },

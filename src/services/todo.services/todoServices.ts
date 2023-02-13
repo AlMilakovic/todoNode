@@ -9,7 +9,8 @@ export type GetToDoError = "TODO_NOT_FOUND";
 
 export async function createToDo(
   title: string,
-  description: string
+  description: string,
+  userId: string
 ): Promise<Result<ToDo, string>> {
   const id = uuidv4();
   const createdDate = new Date().toUTCString();
@@ -18,7 +19,7 @@ export async function createToDo(
     description,
     id,
     createdDate,
-    userId: "random@email.com",
+    userId,
   };
   const resultSave = await saveToDo(toDo);
   if (resultSave.error) {
@@ -36,11 +37,12 @@ export async function deleteToDo(id: string): Promise<Result<string, string>> {
 }
 
 export default async function getToDo(
-  id: string
+  id: string,
+  userId: string
 ): Promise<Result<ToDo, GetToDoError>> {
   let toDo = null;
 
-  toDo = (await todo.findOne({ id })) as ToDo;
+  toDo = (await todo.findOne({ id, userId })) as ToDo;
 
   if (!toDo) {
     return err("TODO_NOT_FOUND");

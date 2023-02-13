@@ -6,4 +6,9 @@ export const todosSchema = new mongoose.Schema({
   description: { type: String, minLength: 10 },
   createdDate: { type: String },
   userId: { type: String, required: true },
+  state: {
+    type: String,
+    enum: ["open", "in progress", "done"],
+    default: "open",
+  },
 });

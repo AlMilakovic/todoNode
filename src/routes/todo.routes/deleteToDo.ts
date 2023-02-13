@@ -14,7 +14,7 @@ export function deleteToDoRouter(): Router {
       try {
         let toDo = {} as ToDo;
 
-        (await getToDo(req.params.id)).match(
+        (await getToDo(req.params.id, req.session?.userId)).match(
           async (value) => {
             toDo = value;
             (await deleteToDo(toDo.id)).match(
