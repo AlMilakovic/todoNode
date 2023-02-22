@@ -52,3 +52,5 @@ app.use(handleClientError);
 http.createServer(app).listen(port, () => {
   console.log("connected");
 });
+
+export default app;
